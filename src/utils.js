@@ -13,15 +13,16 @@ function getArrayValue(definition) {
   }
   const type = definition[0];
   const count = definition[1];
+  const options = definition[2];
   if (!valid(type) || typeof count !== "number" || count === 0) {
     return null;
   }
   return new Array(count).fill(null).map(function() {
-    return getValue(type);
+    return getValue(type, options);
   });
 }
 
-function getValue(type) {
+function getValue(type, options) {
   if (Array.isArray(type)) {
     return getArrayValue(type);
   }
@@ -29,7 +30,7 @@ function getValue(type) {
     return createData(type);
   }
   try {
-    return chance[type]();
+    return chance[type](options);
   } catch (exception) {
     return null;
   }
@@ -38,7 +39,18 @@ function getValue(type) {
 function createData(template) {
   const output = {};
   Object.keys(template).map(function(key, index) {
-    output[key] = getValue(template[key]);
+    let value = template[key];
+    let type;
+    let optionsObj = null;
+    // has options?
+    if (typeof value !== "object" && value.indexOf(',') > -1){
+      type = value.substring(0, value.indexOf(","));
+      const options = value.substring(value.indexOf(",") + 1, value.length);
+      optionsObj = eval("(" + options + ")");
+    } else {
+      type = value;
+    }
+    output[key] = getValue(type, optionsObj);
   });
   return output;
 }
