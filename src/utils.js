@@ -8,12 +8,10 @@ function valid(type) {
 }
 
 function getArrayValue(definition) {
-  if (definition.length !== 2) {
-    return null;
-  }
   const type = definition[0];
   const count = definition[1];
   const options = definition[2];
+
   if (!valid(type) || typeof count !== "number" || count === 0) {
     return null;
   }
