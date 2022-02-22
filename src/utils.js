@@ -12,6 +12,13 @@ function getArrayValue(definition) {
   const count = definition[1];
   const options = definition[2];
 
+  if(typeof type === "object"){
+    // array of objects
+    return new Array(count).fill(null).map(function() {
+      return createData(type);
+    });
+  }
+
   if (!valid(type) || typeof count !== "number" || count === 0) {
     return null;
   }
