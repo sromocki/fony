@@ -35,7 +35,13 @@ function getValue(type, options) {
     return createData(type);
   }
   try {
-    return chance[type](options);
+    var value = chance[type](options);
+    if (type === "date") {
+      var date = new Date(value);
+      var isoDate = date.toISOString();
+      value = isoDate.substring(0, isoDate.indexOf('T'));
+    }
+    return value;
   } catch (exception) {
     return null;
   }
